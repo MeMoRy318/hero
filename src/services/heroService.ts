@@ -5,13 +5,13 @@ import { IRes, axiosService } from './axiosService';
 
 const heroService = {
   hero:{
-    getById:(id: string | number):IRes<IHero> => axiosService.get(`/heroes${id}`),
+    getById:(id: string | number):IRes<IHero> => axiosService.get(`/heroes/${id}`),
     getAll:():IRes<IHero[]> => axiosService.get('/heroes'),
-    create:(data:IHero):IRes<IHero> => axiosService.post(`/heroes${data}`),
-    delete:(id: string | number) => axiosService.delete(`/heroes${id}`),
+    create:(data:IHero):IRes<IHero> => axiosService.post('/heroes',data),
+    delete:(id: string | number) => axiosService.delete(`/heroes/${id}`),
   },
   element:{
-    getAll:():IRes<IElements> => axiosService.get('/filters')
+    getAll:():IRes<IElements[]> => axiosService.get('/filters')
   }
 };
 

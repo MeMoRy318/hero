@@ -5,11 +5,15 @@ import { heroService } from '../../services';
 import { renderContent } from '../../utility';
 import { HeroesListItem } from '../heroesListItem/HeroesListItem';
 
+// Задача для этого компонента:
+// При клике на "крестик" идет удаление персонажа из общего состояния
+// Усложненная задача:
+// Удаление идет и с json файла при помощи метода DELETE
 
 type IProps = PropsWithChildren;
 
 const HeroesList:FC<IProps> = () => {
-  const {heroes, heroesLoadingStatus} = useAppSelector(state => state.heroReducer);
+  const {filters, heroesLoadingStatus} = useAppSelector(state => state.heroReducer);
   const {heroFetched,heroFetching,heroFetchingError} = useAppActionts();
 
   useEffect(()=>{
@@ -20,7 +24,7 @@ const HeroesList:FC<IProps> = () => {
     // eslint-disable-next-line
   },[]);
 
-  const content = renderContent({status:heroesLoadingStatus,data:heroes,Component:HeroesListItem});
+  const content = renderContent({status:heroesLoadingStatus,data:filters,Component:HeroesListItem});
   
   return (
     <>

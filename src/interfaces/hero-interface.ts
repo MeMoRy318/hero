@@ -7,13 +7,15 @@ interface IHero {
     id: string | number,
     name: string,
     description: string
-    element:IElements
+    element:IElements,
 }
 
 interface IHeroState {
     heroes:IHero[],
     heroesLoadingStatus: EStatus,
-    filters:IHero[]
+    filters:IHero[],
+    elements:IElements[]
+    filterParams:IElements
 }
 
 interface IHeroFetching {
@@ -29,6 +31,26 @@ interface IHeroFetchingError {
     type:'HEROES_FETCHING_ERROR'
 }
 
-type IHeroAction = IHeroFetching | IHeroFetched | IHeroFetchingError;
+interface IElementsFetched{
+    type:'ELEMENTS_FETCHED'
+    payload:IElements[]
+}
 
-export type {IHero,IElements, IHeroState, IHeroAction,IHeroFetching,IHeroFetched,IHeroFetchingError};
+interface IHeroCreate {
+    type:'HEROES_CREATE',
+    payload:IHero
+}
+
+interface IHeroDelete {
+    type:'HEROES_DELETE',
+    payload: string | number
+}
+
+interface IHeroFilter {
+    type:'HEROES_FILTER'
+    payload:IElements
+}
+
+type IHeroAction = IHeroFetching | IHeroFetched | IHeroFetchingError | IElementsFetched | IHeroCreate | IHeroDelete | IHeroFilter;
+
+export type {IHeroFilter,IHero,IElements, IHeroState, IHeroAction,IHeroFetching,IHeroFetched,IHeroFetchingError,IElementsFetched,IHeroCreate,IHeroDelete};

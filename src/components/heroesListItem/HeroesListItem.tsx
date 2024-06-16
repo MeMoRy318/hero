@@ -1,19 +1,33 @@
-import {FC,PropsWithChildren} from 'react';
+import { FC, PropsWithChildren } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
+import { useAppActionts } from '../../hooks';
 import { IHero } from '../../interfaces';
+import { heroService } from '../../services';
 import { setClassNameByElements } from '../../utility';
+
+import './heroesListItem.scss';
 
 
 interface IProps extends PropsWithChildren {
-    data:IHero[]
+    data: IHero[];
 }
 
-const HeroesListItem:FC<IProps> = ({data}) => {
- 
-  const elements = data.map(({id,description,element,name}) => {
-    return (
+const HeroesListItem: FC<IProps> = ({ data }) => {
+  const { heroDelete } = useAppActionts();
+
+  const onClick = async (id: string | number) => {
+    try {
+      await heroService.hero.delete(id);
+      heroDelete(id);
+    } catch {
+      console.log('Щось пішло не так');
+    }
+  };
+
+  const elements = data.map(({ id, description, element, name }) => (
+    <CSSTransition key={id} timeout={500} classNames="hero">
       <li
-        key={id}
         className={`card flex-row mb-4 shadow-lg text-white ${setClassNameByElements(element)}`}
       >
         <img
@@ -31,17 +45,18 @@ const HeroesListItem:FC<IProps> = ({data}) => {
             type="button"
             className="btn-close btn-close"
             aria-label="Close"
+            onClick={() => onClick(id)}
           ></button>
         </span>
       </li>
-    );
-  });
+    </CSSTransition>
+  ));
   
   return (
-    <ul>
+    <TransitionGroup component="ul">
       {elements}
-    </ul>
+    </TransitionGroup>
   );
 };
 
-export {HeroesListItem};
+export { HeroesListItem };

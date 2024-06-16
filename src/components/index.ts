@@ -3,3 +3,4 @@ export * from './UI/Spinner';
 export * from './heroesList/HeroesList';
 export * from './heroesAddForm/HeroesAddForm';
 export * from './heroesFilters/HeroesFilters';
+export * from './elementsList/ElementList';

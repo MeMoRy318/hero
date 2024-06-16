@@ -1,4 +1,10 @@
-import { FC,PropsWithChildren } from 'react'; 
+import { FC,FormEvent,PropsWithChildren } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+import { useAppActionts } from '../../hooks';
+import { IHero } from '../../interfaces';
+import { heroService } from '../../services';
+import { ElementList } from '../index';
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
@@ -13,8 +19,24 @@ import { FC,PropsWithChildren } from 'react';
 type IProps = PropsWithChildren;
 
 const HeroesAddForm:FC<IProps> = () => {
+  
+  const {heroCreate} = useAppActionts();
+
+
+  const onSubmit = async (e:FormEvent<HTMLFormElement>) => {
+    const form = e.currentTarget;
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    const {data:newHero} = await heroService.hero.create({...data,id:uuidv4()} as IHero);
+    heroCreate(newHero);
+    form.reset();
+  };
+
   return (
-    <form className="border p-4 shadow-lg rounded">
+    <form 
+      className="border p-4 shadow-lg rounded"
+      onSubmit={onSubmit}
+    >
       <div className="mb-3">
         <label htmlFor="name" className="form-label fs-4">Имя нового героя</label>
         <input 
@@ -30,28 +52,13 @@ const HeroesAddForm:FC<IProps> = () => {
         <label htmlFor="text" className="form-label fs-4">Описание</label>
         <textarea
           required
-          name="text" 
+          name="description" 
           className="form-control" 
           id="text" 
           placeholder="Что я умею?"
           style={{'height': '130px'}}/>
       </div>
-
-      <div className="mb-3">
-        <label htmlFor="element" className="form-label">Выбрать элемент героя</label>
-        <select 
-          required
-          className="form-select" 
-          id="element" 
-          name="element">
-          <option >Я владею элементом...</option>
-          <option value="fire">Огонь</option>
-          <option value="water">Вода</option>
-          <option value="wind">Ветер</option>
-          <option value="earth">Земля</option>
-        </select>
-      </div>
-
+      <ElementList/>
       <button type="submit" className="btn btn-primary">Создать</button>
     </form>
   );
